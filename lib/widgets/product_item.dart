@@ -13,43 +13,45 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
-        footer: GridTileBar(
-          backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(
-              product.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: Colors.indigoAccent,
+    // final product = Provider.of<Product>(context);
+    return Consumer<Product>(
+      builder: (ctx, product, child) => ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: GridTile(
+          footer: GridTileBar(
+            backgroundColor: Colors.black87,
+            leading: IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Colors.indigoAccent,
+              ),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+              },
             ),
-            onPressed: () {
-              product.toggleFavoriteStatus();
+            title: Text(
+              product.title,
+              textAlign: TextAlign.center,
+            ),
+            trailing: const IconButton(
+              icon: Icon(
+                Icons.shop,
+                color: Colors.indigoAccent,
+              ),
+              onPressed: null,
+            ),
+          ),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                ProductDetailScreen.routePath,
+                arguments: product.id,
+              );
             },
-          ),
-          title: Text(
-            product.title,
-            textAlign: TextAlign.center,
-          ),
-          trailing: const IconButton(
-            icon: Icon(
-              Icons.shop,
-              color: Colors.indigoAccent,
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
             ),
-            onPressed: null,
-          ),
-        ),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              ProductDetailScreen.routePath,
-              arguments: product.id,
-            );
-          },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
           ),
         ),
       ),
