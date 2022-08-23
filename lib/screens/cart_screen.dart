@@ -54,6 +54,7 @@ class CartScreen extends StatelessWidget {
                 itemCount: cart.itemCount,
                 itemBuilder: (ctx, idx) => ci.CartItem(
                     cart.items.values.toList()[idx].id,
+                    cart.items.keys.toList()[idx],
                     cart.items.values.toList()[idx].price,
                     cart.items.values.toList()[idx].quantity,
                     cart.items.values.toList()[idx].title),
