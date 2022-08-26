@@ -26,9 +26,39 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchOrders() async {
+    final url = Uri.https(
+        'flutter-app-ecb05-default-rtdb.firebaseio.com', 'orders.json');
+    final response = await http.get(url);
+    final List<OrderItem> loadedOrders = [];
+    final extractedData = convert.json.decode(response.body);
+    if (extractedData == null) {
+      return;
+    }
+    extractedData.forEach((orderId, orderData) {
+      loadedOrders.add(OrderItem(
+        id: orderId,
+        amount: orderData['amount'],
+        dateTime: DateTime.parse(orderData['dateTime']),
+        products: (orderData['products'] as List<dynamic>)
+            .map(
+              (prodItem) => CartItem(
+                id: prodItem['id'],
+                price: prodItem['price'],
+                quantity: prodItem['quantity'],
+                title: prodItem['title'],
+              ),
+            )
+            .toList(),
+      ));
+    });
+    _orders = loadedOrders.reversed.toList();
+    notifyListeners();
+  }
+
   void addOrder(List<CartItem> cartProducts, double total) async {
     final url = Uri.https(
-        'flutter-app-ecb05-default-rtdb.firebaseio.com', 'products.json');
+        'flutter-app-ecb05-default-rtdb.firebaseio.com', 'orders.json');
     final timeStamp = DateTime.now();
     final response = await http.post(url,
         body: convert.json.encode({
