@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.indigoAccent,
           fontFamily: 'Lato',
         ),
-        home: AuthScreen(),
+        home: AuthMode.Login == true ? ProductOverviewPage() : AuthScreen(),
         routes: {
           ProductDetailScreen.routePath: (ctx) => ProductDetailScreen(),
           CartScreen.routePath: (ctx) => CartScreen(),
