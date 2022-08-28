@@ -74,8 +74,23 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchProducts() async {
-    var _params = {'auth': authToken};
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    var _params;
+
+    if (filterByUser) {
+      _params = <String, String>{
+        'auth': authToken,
+        'orderBy': convert.json.encode("creatorId"),
+        'equalTo': convert.json.encode(userId),
+      };
+    }
+
+    if (filterByUser == false) {
+      _params = <String, String>{
+        'auth': authToken,
+      };
+    }
+
     var url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
         'products.json', _params);
     try {
@@ -90,13 +105,15 @@ class Products with ChangeNotifier {
           'userFavorites/$userId.json', _params);
       final favoriteResponse = await http.get(url);
       final favoriteData = convert.json.decode(favoriteResponse.body);
+
       extractedData.forEach((prodId, prodItem) {
         loadedProducts.add(Product(
           id: prodId,
           title: prodItem['title'],
           description: prodItem['description'],
           price: prodItem['price'],
-          isFavorite: prodItem['isFavorite'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[prodId] ?? false,
           imageUrl: prodItem['imageUrl'],
         ));
       });
@@ -119,6 +136,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
