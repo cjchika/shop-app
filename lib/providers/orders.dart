@@ -21,14 +21,18 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String authToken;
+
+  Orders(this.authToken, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchOrders() async {
-    final url = Uri.https(
-        'flutter-app-ecb05-default-rtdb.firebaseio.com', 'orders.json');
+    var _params = {'auth': authToken};
+    final url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
+        'orders.json', _params);
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData = convert.json.decode(response.body);
