@@ -45,7 +45,8 @@ class AppDrawer extends StatelessWidget {
           leading: Icon(Icons.exit_to_app_rounded),
           title: Text('Logout'),
           onTap: () {
-            //Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('/');
             //   Navigator.of(context)
             //       .pushReplacementNamed(UserProductScreen.routePath);
             Provider.of<Auth>(context, listen: false).logout();
