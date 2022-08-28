@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 import 'product.dart';
+import '../providers/auth.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -42,8 +43,9 @@ class Products with ChangeNotifier {
   ];
 
   final String authToken;
+  final String userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   //var _showFavoriteOnly = false;
 
@@ -74,7 +76,7 @@ class Products with ChangeNotifier {
 
   Future<void> fetchProducts() async {
     var _params = {'auth': authToken};
-    final url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
+    var url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
         'products.json', _params);
     try {
       final response = await http.get(url);
@@ -84,6 +86,10 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+      url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
+          'userFavorites/$userId.json', _params);
+      final favoriteResponse = await http.get(url);
+      final favoriteData = convert.json.decode(favoriteResponse.body);
       extractedData.forEach((prodId, prodItem) {
         loadedProducts.add(Product(
           id: prodId,
@@ -113,7 +119,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(

@@ -23,6 +23,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return _userId;
+  }
+
   static const keyParam = {'key': 'AIzaSyBVDI4_fEAYL5Dmo2FiA-_PYCXuMauiAd8'};
 
   Future<void> _authenticate(
