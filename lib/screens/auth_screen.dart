@@ -113,6 +113,12 @@ class _AuthCardState extends State<AuthCard> {
         content: Text(message),
         actions: [
           RaisedButton(
+            color: Colors.deepPurple,
+            textColor: Colors.white,
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             onPressed: () {
               Navigator.of(ctx).pop();
             },
