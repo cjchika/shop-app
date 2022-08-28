@@ -41,6 +41,10 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final String authToken;
+
+  Products(this.authToken, this._items);
+
   //var _showFavoriteOnly = false;
 
   List<Product> get items {
@@ -69,8 +73,9 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchProducts() async {
-    final url = Uri.https(
-        'flutter-app-ecb05-default-rtdb.firebaseio.com', 'products.json');
+    var _params = {'auth': authToken};
+    final url = Uri.https('flutter-app-ecb05-default-rtdb.firebaseio.com',
+        'products.json', _params);
     try {
       final response = await http.get(url);
       final extractedData =
