@@ -5,6 +5,7 @@ import '../screens/orders_screen.dart';
 import '../screens/user_product_screen.dart';
 import '../providers/auth.dart';
 import '../screens/auth_screen.dart';
+import '../helpers/custom_route.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -26,9 +27,14 @@ class AppDrawer extends StatelessWidget {
         Divider(),
         ListTile(
           leading: Icon(Icons.payment_rounded),
-          title: Text('Payment'),
+          title: Text('Orders'),
           onTap: () {
             Navigator.of(context).pushReplacementNamed(OrderScreen.routPath);
+            // Navigator.of(context).pushReplacement(
+            //   CustomRoute(
+            //     builder: (ctx) => OrderScreen(),
+            //   ),
+            // );
           },
         ),
         Divider(),
